@@ -5,24 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vue Learning Project</title>
+    <script src="https://unpkg.com/vue@3"></script>
 </head>
 
 <body>
     <div id="app">
-        <h1>Welcome to Vue Learning</h1>
-        <p>This is a Vue.js learning project.</p>
+        <p>
+            <input type="text" v-model="greeting">
+        </p>
+        <p>{{ greeting }} ({{ greeting.length }})</p>
     </div>
 
-    <!-- Vue.js CDN -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
-        const { createApp } = Vue;
-
-        createApp({
+        Vue.createApp({
             data() {
                 return {
-                    message: 'Hello Vue!'
-                }
+                    greeting: 'This is my first Vue.js project.'
+                };
+            },
+
+            mounted() {
+                setTimeout(() => {
+                    this.greeting = 'Hello, Vue!';
+                }, 3000);
             }
         }).mount('#app');
     </script>
