@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vue 3 Assignment Tracker">
+    <title>Vue 3 Assignment Tracker</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-full">
+    <div id="app" class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <main class="max-w-2xl mx-auto">
+            <header class="mb-8 text-center">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Assignment Tracker</h1>
+                <p class="text-gray-600">Keep track of your tasks and progress</p>
+            </header>
+
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <section class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">
+                        In Progress
+                        <span class="ml-2 px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                            {{ inProgressCount }}
+                        </span>
+                    </h2>
+                    
+                    <ul class="divide-y divide-gray-200">
+                        <li 
+                            v-for="assignment in inProgressAssignments" 
+                            :key="assignment.id"
+                            class="py-4 flex items-center hover:bg-gray-50 px-2 rounded"
+                        >
+                            <input 
+                                type="checkbox" 
+                                :id="'assignment-' + assignment.id"
+                                v-model="assignment.completed"
+                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            >
+                            <label 
+                                :for="'assignment-' + assignment.id"
+                                class="ml-3 block text-gray-900 cursor-pointer"
+                            >
+                                {{ assignment.name }}
+                            </label>
+                        </li>
+                    </ul>
+                </section>
+
+                <section v-if="completedAssignments.length > 0" class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900 mb-4">
+                        Completed
+                        <span class="ml-2 px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                            {{ completedAssignments.length }}
+                        </span>
+                    </h2>
+                    
+                    <ul class="divide-y divide-gray-200">
+                        <li 
+                            v-for="assignment in completedAssignments" 
+                            :key="'completed-' + assignment.id"
+                            class="py-4 flex items-center px-2 rounded text-gray-500"
+                        >
+                            <input 
+                                type="checkbox" 
+                                :id="'completed-' + assignment.id"
+                                v-model="assignment.completed"
+                                class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                            >
+                            <label 
+                                :for="'completed-' + assignment.id"
+                                class="ml-3 block line-through cursor-pointer"
+                            >
+                                {{ assignment.name }}
+                            </label>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const { createApp, ref, computed } = Vue;
+
+        const app = {
+            setup() {
+                const assignments = ref([
+                    { id: 1, name: 'Finishing project', completed: false },
+                    { id: 2, name: 'Read chapter 4', completed: false },
+                    { id: 3, name: 'Turn in homework', completed: false }
+                ]);
+
+                const inProgressAssignments = computed(() => 
+                    assignments.value.filter(a => !a.completed)
+                );
+
+                const completedAssignments = computed(() => 
+                    assignments.value.filter(a => a.completed)
+                );
+
+                const inProgressCount = computed(() => inProgressAssignments.value.length);
+
+                return {
+                    assignments,
+                    inProgressAssignments,
+                    completedAssignments,
+                    inProgressCount
+                };
+            }
+        };
+
+        createApp(app).mount('#app');
+    </script>
+</body>
+</html>
