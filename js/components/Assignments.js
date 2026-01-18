@@ -5,16 +5,20 @@ export default {
     components: { AssignmentList, AssignmentCreate },
     
     template: `
-        <section class="space-y-6">
-            <assignment-list :assignments="filters.inProgress" title="In Progress"></assignment-list>
-            <assignment-list :assignments="filters.completed" title="Completed"></assignment-list>
+        <section class="flex gap-8">
+            <assignment-list :assignments="filters.inProgress" :loading="loading" title="In Progress">
             <assignment-create @add="add"></assignment-create>
+            </assignment-list>
+
+            <assignment-list :assignments="filters.completed" :loading="loading" title="Completed" can-toggle></assignment-list>
+            
         </section>
     `,
 
     data() {
         return {
             assignments: [],
+            loading: true
         };
     },
     
@@ -28,9 +32,17 @@ export default {
     },
 
     created() {
+        this.loading = true;
         fetch('http://localhost:3001/assignments')
             .then(response => response.json())
-            .then(assignments => this.assignments = assignments);
+            .then(assignments => {
+                this.assignments = assignments;
+                this.loading = false;
+            })
+            .catch(error => {
+                console.error('Error loading assignments:', error);
+                this.loading = false;
+            });
     },
 
     methods: {
