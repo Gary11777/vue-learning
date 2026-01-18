@@ -6,36 +6,53 @@ export default {
         Assignment, AssignmentTags
     },    
     template: `
-        <section v-show="assignments.length">
-                <h2 class="font-bold mb-2">
-                    {{ title }}
-                     <span>
-                         ({{ assignments.length }})
-                     </span>
-                </h2>
+        <section v-show="show && (assignments.length || loading)" class="w-60">
+                
+                <div class="flex justify-between items-start">
+                    <h2 class="font-bold mb-2">
+                        {{ title }}
+                        <span v-if="!loading">
+                            ({{ assignments.length }})
+                        </span>
+                        <span v-else class="text-gray-500">
+                            Loading...
+                        </span>
+                    </h2>
+                    <button v-show="canToggle" @click="show = false">&times;</button>
+                </div>
 
                 <assignment-tags 
+                    v-if="!loading"
                     v-model:currentTag="currentTag"
                     :initial-tags="assignments.map(a => a.tag)" 
                 />
                 
-                <ul class="border border-gray-600 divide-y divide-gray-600">
+                <ul v-if="!loading" class="border border-gray-600 divide-y divide-gray-600">
                     <assignment 
                     v-for="assignment in filteredAssignments" 
                     :key="assignment.id"
                     :assignment="assignment"></assignment>
                 </ul>
+
+                <slot></slot>
+                
         </section>
     `,
 
     props: {
         assignments: Array,
-        title: String
+        title: String,
+        loading: Boolean,
+        canToggle: {
+            type: Boolean,
+            default: false
+        }
     },
 
      data() {
         return {
-            currentTag: 'all'
+            currentTag: 'all',
+            show: true
         }
     },
 
@@ -46,5 +63,5 @@ export default {
             }
             return this.assignments.filter(a => a.tag === this.currentTag);
         },
-    }
+    },
 }
