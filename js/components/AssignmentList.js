@@ -1,12 +1,13 @@
 import Assignment from './Assignment.js';
 import AssignmentTags from './AssignmentTags.js';
+import Panel from './Panel.js';
 
 export default {
     components: {
-        Assignment, AssignmentTags
-    },    
+        Assignment, AssignmentTags, Panel
+    },
     template: `
-        <section v-show="show && (assignments.length || loading)" class="w-60">
+        <Panel v-show="show && (assignments.length || loading)" class="w-60">
                 
                 <div class="flex justify-between items-start">
                     <h2 class="font-bold mb-2">
@@ -35,8 +36,8 @@ export default {
                 </ul>
 
                 <slot></slot>
-                
-        </section>
+            
+        </Panel>
     `,
 
     props: {
@@ -49,7 +50,7 @@ export default {
         }
     },
 
-     data() {
+    data() {
         return {
             currentTag: 'all',
             show: true
